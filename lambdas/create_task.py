@@ -1,11 +1,11 @@
 from json import loads, dumps
-from boto3 import resources
+from boto3 import resource
 from os import environ
 from uuid import uuid4
 from boto3.dynamodb.conditions import Attr
 
 
-dynamodb = resources("dynamodb")
+dynamodb = resource("dynamodb")
 table = dynamodb.Table(environ["TABLE_NAME"])
 
 
@@ -29,7 +29,7 @@ def add(event, context):
         table.put_item(Item=new_task)
         return {
             "statusCode": 201,
-            "body": dumps({"message": f"Task {new_task['taskId']} added successfully"})
+            "body": dumps(new_task)
         }
     except Exception as error:
         return {

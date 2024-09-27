@@ -1,9 +1,9 @@
 from json import dumps
-from boto3 import resources
+from boto3 import resource
 from os import environ
 
 
-dynamodb = resources("dynamodb")
+dynamodb = resource("dynamodb")
 table = dynamodb.Table(environ["TABLE_NAME"])
 
 
