@@ -3,7 +3,7 @@ from boto3 import resources
 from os import environ
 
 
-dynamodb = resources("dyanmodb")
+dynamodb = resources("dynamodb")
 table = dynamodb.Table(environ["TABLE_NAME"])
 
 
