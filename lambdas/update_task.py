@@ -16,7 +16,9 @@ def edit(event, context):
             }
         taskId = event["pathParameters"]["taskId"]
         task = loads(event["body"])
-        table.get_item(Key={"taskId": taskId})
+        res = table.get_item(Key={"taskId": taskId})
+        if "Item" not in res:
+            raise Exception("Task not found")
         table.update_item(
             Key={"taskId": taskId},
             UpdateExpression="SET #T = :t, #D = :d, #S = :s",
