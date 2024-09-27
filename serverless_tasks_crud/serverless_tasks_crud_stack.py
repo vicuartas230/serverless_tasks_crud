@@ -34,8 +34,18 @@ class ServerlessTasksCrudStack(Stack):
             }
         )
 
+        update_task_function = _lambda.Function(self, "UpdateTaskFunction",
+            runtime = _lambda.Runtime.PYTHON_3_9,
+            handler = "update_task.edit",
+            code = _lambda.Code.from_asset("lambdas"),
+            environment = {
+                "TABLE_NAME": db.table_name
+            }
+        )
+
         db.grant_read_data(get_task_function)
         db.grant_read_write_data(create_task_function)
+        db.grant_read_write_data(update_task_function)
 
         api = apigateway.RestApi(self, "APIEndpoint",
             rest_api_name = "TasksAPI",
@@ -47,3 +57,4 @@ class ServerlessTasksCrudStack(Stack):
 
         task = tasks.add_resource("{taskId}")
         task.add_method("GET", apigateway.LambdaIntegration(get_task_function))
+        task.add_method("PUT", apigateway.LambdaIntegration(update_task_function))
