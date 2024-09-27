@@ -10,35 +10,36 @@ table = dynamodb.Table(environ["TABLE_NAME"])
 def edit(event, context):
     try:
         if len(event["pathParameters"]["taskId"]) != 36:
-            return {
-                "statusCode": 400,
-                "body": dumps({"error": "The ID has been provided incorrectly."})
-            }
-        taskId = event["pathParameters"]["taskId"]
-        task = loads(event["body"])
-        res = table.get_item(Key={"taskId": taskId})
-        if "Item" not in res:
-            raise Exception("Task not found")
-        table.update_item(
-            Key={"taskId": taskId},
-            UpdateExpression="SET #T = :t, #D = :d, #S = :s",
-            ExpressionAttributeNames={
-                "#T": "title",
-                "#D": "description",
-                "#S": "status"
-            },
-            ExpressionAttributeValues={
-                ":t": task["title"],
-                ":d": task["description"],
-                ":s": task["status"]
-            }
-        )
-        return {
-            "statusCode": 201,
-            "body": dumps({"message": f"Task {taskId} updated successfully"})
-        }
+            statusCode = 400
+            responseBody = {"error": "The ID has been provided incorrectly."}
+        else:
+            taskId = event["pathParameters"]["taskId"]
+            task = loads(event["body"])
+            res = table.get_item(Key={"taskId": taskId})
+            if "Item" not in res:
+                statusCode = 404
+                responseBody = {"error": "Task not found"}
+            else:
+                table.update_item(
+                    Key={"taskId": taskId},
+                    UpdateExpression="SET #T = :t, #D = :d, #S = :s",
+                    ExpressionAttributeNames={
+                        "#T": "title",
+                        "#D": "description",
+                        "#S": "status"
+                    },
+                    ExpressionAttributeValues={
+                        ":t": task["title"],
+                        ":d": task["description"],
+                        ":s": task["status"]
+                    }
+                )
+                statusCode = 200
+                responseBody = {"message": f"Task {taskId} updated successfully"}
     except Exception as error:
-        return {
-            "statusCode": 400,
-            "body": dumps({"error": str(error)})
-        }
+        statusCode = 500
+        responseBody = {"error": str(error)}
+    return {
+        "statusCode": statusCode,
+        "body": dumps(responseBody)
+    }

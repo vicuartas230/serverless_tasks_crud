@@ -10,25 +10,29 @@ table = dynamodb.Table(environ["TABLE_NAME"])
 def fetch(event, context):
     try:
         if len(event["pathParameters"]["taskId"]) != 36:
-            raise Exception("The ID has been provided incorrectly.")
-        taskId = event["pathParameters"]["taskId"]
-        body = table.get_item(
-            Key={"taskId": taskId}
-        )
-        if "Item" not in body:
-            raise Exception("Task not found.")
-        res = body["Item"]
-        return {
-            "statusCode": 200,
-            "body": dumps({
-                "taskId": res["taskId"],
-                "title": res["title"],
-                "description": res["description"],
-                "status": res["status"]
-            })
-        }
+            statusCode = 400
+            responseBody = {"error": "The ID has been provided incorrectly."}
+        else:
+            taskId = event["pathParameters"]["taskId"]
+            body = table.get_item(
+                Key={"taskId": taskId}
+            )
+            if "Item" not in body:
+                statusCode = 404
+                responseBody = {"error": "Task not found."}
+            else:
+                res = body["Item"]
+                statusCode = 200
+                responseBody = {
+                    "taskId": res["taskId"],
+                    "title": res["title"],
+                    "description": res["description"],
+                    "status": res["status"]
+                }
     except Exception as error:
-        return {
-            "statusCode": 400,
-            "body": dumps({"error": str(error)})
-        }
+        statusCode = 500
+        responseBody = {"error": str(error)}
+    return {
+        "statusCode": statusCode,
+        "body": dumps(responseBody)
+    }
