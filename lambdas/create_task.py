@@ -13,10 +13,7 @@ def add(event, context):
     try:
         task = loads(event["body"])
         if "title" not in task or "status" not in task:
-            return {
-                "statusCode": 400,
-                "body": dumps({"error": "Missing required attributes."})
-            }
+            raise Exception("Missing required attributes.")
         new_task = {
             "taskId": str(uuid4()),
             "title": task["title"],
