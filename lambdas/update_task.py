@@ -1,6 +1,7 @@
 from json import dumps, loads
 from boto3 import resource
 from os import environ
+from utils import create_update_expression
 
 
 dynamodb = resource("dynamodb")
@@ -14,25 +15,18 @@ def edit(event, context):
             responseBody = {"error": "The ID has been provided incorrectly."}
         else:
             taskId = event["pathParameters"]["taskId"]
-            task = loads(event["body"])
             res = table.get_item(Key={"taskId": taskId})
             if "Item" not in res:
                 statusCode = 404
                 responseBody = {"error": "Task not found"}
             else:
+                task = loads(event["body"])
+                updateExpression = create_update_expression(task)
                 table.update_item(
                     Key={"taskId": taskId},
-                    UpdateExpression="SET #T = :t, #D = :d, #S = :s",
-                    ExpressionAttributeNames={
-                        "#T": "title",
-                        "#D": "description",
-                        "#S": "status"
-                    },
-                    ExpressionAttributeValues={
-                        ":t": task["title"],
-                        ":d": task["description"],
-                        ":s": task["status"]
-                    }
+                    UpdateExpression=updateExpression["UpdateExpression"],
+                    ExpressionAttributeNames=updateExpression["ExpressionAttributeNames"],
+                    ExpressionAttributeValues=updateExpression["ExpressionAttributeValues"]
                 )
                 statusCode = 200
                 responseBody = {"message": f"Task {taskId} updated successfully"}
