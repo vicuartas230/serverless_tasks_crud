@@ -163,6 +163,10 @@ The URL of the endpoint will be showed once the deployment process finish. Clien
 
 By deleting your application, the CloudFormation stack associated with your CDK stack including the resources created will be cleaned up avoiding unnecessary charges.
 
+```bash
+$ cdk destroy
+```
+
 ## Project Structure
 
 ```
