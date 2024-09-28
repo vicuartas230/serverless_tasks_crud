@@ -16,7 +16,7 @@ def add(event, context):
             statusCode = 400
             responseBody = {"error": "Missing required attributes."}
         else:
-            res = table.scan(FilterExpression=Attr("title").eq(new_task["title"]))
+            res = table.scan(FilterExpression=Attr("title").eq(task["title"]))
             if res["Items"]:
                 statusCode = 400
                 responseBody = {"error": "Task already exists."}
