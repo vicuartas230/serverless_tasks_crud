@@ -18,8 +18,8 @@ To work with the AWS CDK, you must have an AWS account and credentials and have 
 ### 1. Clone the repository
 
 ```bash
-$ git clone https://github.com/vicuartas230/serverless_tasks_crud.git
-$ cd serverless_tasks_crud
+git clone https://github.com/vicuartas230/serverless_tasks_crud.git
+cd serverless_tasks_crud
 ```
 
 ### 2. Install the AWS CDK CLI
@@ -39,20 +39,20 @@ cdk --version
 To create a virtualenv on MacOS and Linux:
 
 ```
-$ python3 -m venv .venv
+python3 -m venv .venv
 ```
 
 After the init process completes and the virtualenv is created, you can use the following
 step to activate your virtualenv.
 
 ```bash
-$ source .venv/bin/activate
+source .venv/bin/activate
 ```
 
 If you are a Windows platform, you would activate the virtualenv like this:
 
 ```bash
-% .venv\Scripts\activate.bat
+.venv\Scripts\activate.bat
 ```
 
 ### 3. Install dependencies
@@ -61,7 +61,7 @@ Once the virtualenv is activated, you can install the required dependencies.
 
 
 ```bash
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### 4. Configure your AWS environment
@@ -75,39 +75,39 @@ First, determine the AWS environment that you want to use. An AWS environment co
     Run the following AWS CLI command to get the AWS account ID for your `default` profile:
 
     ```bash
-    $ aws sts get-caller-identity --query "Account" --output text
+    aws sts get-caller-identity --query "Account" --output text
     ```
 
     If you prefer to use a named profile, provide the name of your profile using the `--profile` option:
 
     ```bash
-    $ aws sts get-caller-identity --profile your-profile-name --query "Account" --output text
+    aws sts get-caller-identity --profile your-profile-name --query "Account" --output text
     ```
 
 - #### Obtain your AWS Region
     Run the following AWS CLI command to get the Region that you configured for your `default` profile:
 
     ```bash
-    $ aws configure get region
+    aws configure get region
     ```
 
     If you prefer to use a named profile, provide the name of your profile using the `--profile` option:
 
     ```bash
-    $ aws configure get region --profile your-profile-name
+    aws configure get region --profile your-profile-name
     ```
 
 - #### Create a `.env` file:
 
     ```bash
-    $ touch .env
+    touch .env
     ```
 
 - #### Add envoriment variables:
 
     ```bash
-    $ echo CDK_DEFAULT_ACCOUNT="your AWS account ID" >> .env
-    $ echo CDK_DEFAULT_REGION="your AWS region" >> .env
+    echo CDK_DEFAULT_ACCOUNT="your AWS account ID" >> .env
+    echo CDK_DEFAULT_REGION="your AWS region" >> .env
     ```
 
 ### 5. Bootstrap your AWS environment
@@ -117,14 +117,14 @@ In this step, you bootstrap the AWS environment that you configured in the previ
 To bootstrap your environment, run the following from the root of your CDK project:
 
 ```bash
-$ cdk bootstrap
+cdk bootstrap
 ```
 
 ### 6. Deploy your CDK stack
 
 From the root of your project, run the following. Confirm changes if prompted:
 ```bash
-$ cdk deploy
+cdk deploy
 ```
 
 ### 7. Testing your API
@@ -134,7 +134,7 @@ The URL of the endpoint will be showed once the deployment process finish. Clien
 - Create a Task
 
     ```bash
-    $ curl -X POST https://<ENDPOINT_URL>/tasks \
+    curl -X POST https://<ENDPOINT_URL>/tasks \
         -H "Content-Type: application/json" \
         -d '{"title": "task", "description": "detailed description", "status": "pending"}'
     ```
@@ -142,13 +142,13 @@ The URL of the endpoint will be showed once the deployment process finish. Clien
 - Get a Task
 
     ```bash
-    $ curl -X GET https://<ENDPOINT_URL>/tasks/{<TASK_ID>}
+    curl -X GET https://<ENDPOINT_URL>/tasks/{<TASK_ID>}
     ```
 
 - Update a Task
 
     ```bash
-    $ curl -X PUT https://<ENDPOINT_URL>/tasks/{<TASK_ID>} \
+    curl -X PUT https://<ENDPOINT_URL>/tasks/{<TASK_ID>} \
         -H "Content-Type: application/json" \
         -d '{"title": "new task", "description": "new description", "status": "completed"}' 
     ```
@@ -156,7 +156,7 @@ The URL of the endpoint will be showed once the deployment process finish. Clien
 - Delete a Task
 
     ```bash
-    $ curl -X DELETE https://<ENDPOINT_URL>/tasks/{<TASK_ID>}
+    curl -X DELETE https://<ENDPOINT_URL>/tasks/{<TASK_ID>}
     ```
 
 ### 8. Delete your application
@@ -164,7 +164,7 @@ The URL of the endpoint will be showed once the deployment process finish. Clien
 By deleting your application, the CloudFormation stack associated with your CDK stack including the resources created will be cleaned up avoiding unnecessary charges.
 
 ```bash
-$ cdk destroy
+cdk destroy
 ```
 
 ## Project Structure
