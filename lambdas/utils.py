@@ -1,4 +1,12 @@
+import re
+from uuid import uuid4
 
+
+status_choices = [
+    "pending",
+    "in-progress",
+    "completed"
+]
 
 def create_update_expression(attrs):
     expression = {
@@ -15,10 +23,10 @@ def create_update_expression(attrs):
 
     return expression
 
-exp = create_update_expression(
-    {
-        "title": "Finish readme file",
-        "description": "To deliver the project",
-        "status": "in-progress"
-    }
-)
+def is_valid(uuid_code):
+    if re.match(uuid_code):
+        return True
+    return False
+
+a = uuid4()
+print(a)

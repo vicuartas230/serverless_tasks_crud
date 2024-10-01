@@ -3,6 +3,7 @@ from boto3 import resource
 from os import environ
 from uuid import uuid4
 from boto3.dynamodb.conditions import Attr
+from utils import status_choices
 
 
 dynamodb = resource("dynamodb")
@@ -20,6 +21,9 @@ def add(event, context):
             if res["Items"]:
                 statusCode = 400
                 responseBody = {"error": "Task already exists."}
+            elif task["status"] not in status_choices:
+                statusCode = 400
+                responseBody = {"error": "Status incorrect."}
             else:
                 new_task = {
                     "taskId": str(uuid4()),

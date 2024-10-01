@@ -1,7 +1,7 @@
 from json import dumps, loads
 from boto3 import resource
 from os import environ
-from utils import create_update_expression
+from utils import create_update_expression, status_choices
 
 
 dynamodb = resource("dynamodb")
@@ -21,6 +21,11 @@ def edit(event, context):
                 responseBody = {"error": "Task not found"}
             else:
                 task = loads(event["body"])
+                if task["status"] not in status_choices:
+                    return {
+                        "statusCode" : 400,
+                        "body": dumps({"error": "Status incorrect"})
+                    }
                 updateExpression = create_update_expression(task)
                 table.update_item(
                     Key={"taskId": taskId},
